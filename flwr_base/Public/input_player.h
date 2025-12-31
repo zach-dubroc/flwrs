@@ -19,7 +19,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* fp_camera;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta = (AllowPrivateAccess = "true"))
-	FName fp_camera_socket = "head";
+	FName fp_camera_socket;
 
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float min_arm_length;
