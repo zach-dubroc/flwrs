@@ -14,28 +14,11 @@ class FLWR_BASE_API Ainput_player : public ACharacter
 
 
 protected:
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* spring_arm;
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* fp_camera;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta = (AllowPrivateAccess = "true"))
-	FName fp_camera_socket;
 
-	UPROPERTY(EditAnywhere, Category="Camera")
-	float min_arm_length;
-	UPROPERTY(EditAnywhere, Category="Camera")
-	float max_arm_length;
-	UPROPERTY(EditAnywhere, Category="Camera")
-	float zoom_step;
-	UPROPERTY(EditAnywhere, Category="Camera")
-	float zoom_interp_speed;
-	UPROPERTY(EditAnywhere, Category="Camera")
-	float target_arm_length;
-	UPROPERTY(EditAnywhere, Category="Camera")
-	float current_arm_length;
 
-	UPROPERTY(VisibleAnywhere, Category="Camera")
-	bool is_first_person = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class Uplayer_camera_component* camera_component;
+
 
 	UPROPERTY(EditAnywhere, Category="EnhancedInput")
 	class UInputMappingContext* input_mapping;
@@ -77,4 +60,7 @@ protected:
 	void SprintStart(const FInputActionValue& input_value);
 	void ZoomIn(const FInputActionValue& input_value);
 	void ZoomOut(const FInputActionValue& input_value);
-};
+}; 
+
+
+

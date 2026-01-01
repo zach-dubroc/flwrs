@@ -7,35 +7,13 @@
 #include "Components/SceneComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
-	//todo
-	// adjust the spring arm/cam socket movement when in different zoom levels of third-person
-	// ADS boi
-	// tf are tags
+#include "player_camera_component.h"
 
 Ainput_player::Ainput_player()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	fp_camera_socket = "cam_socket";
-	spring_arm = CreateDefaultSubobject<USpringArmComponent>("spring_arm");
-	spring_arm->SetupAttachment(GetMesh(),fp_camera_socket);
-	spring_arm->bUsePawnControlRotation = true;
-	spring_arm->bEnableCameraLag = true;
-	spring_arm->CameraLagSpeed = 30.f;
-
-	fp_camera = CreateDefaultSubobject<UCameraComponent>("fp_Camera");
-	fp_camera->SetupAttachment(spring_arm);
-	fp_camera->bUsePawnControlRotation = true;
-	
-
-	min_arm_length = 0.f;
-	max_arm_length = 400.f;
-	zoom_step = 80.f;
-	zoom_interp_speed = 10.f;
-	target_arm_length = max_arm_length;
-	current_arm_length = max_arm_length;
-	
+	camera_component = CreateDefaultSubobject<Uplayer_camera_component>("player_camera_component");
 	walk_speed = FMath::Clamp(600.f, 150.f, 1200.f);
 	sprint_speed = FMath::Clamp(1200.f, walk_speed + 1.f, 2400.f);
 }
@@ -48,8 +26,6 @@ void Ainput_player::BeginPlay()
 void Ainput_player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	current_arm_length = FMath::FInterpTo(current_arm_length, target_arm_length, DeltaTime, zoom_interp_speed);
-	spring_arm->TargetArmLength = current_arm_length;
 }
 
 void Ainput_player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -76,7 +52,6 @@ void Ainput_player::Move(const FInputActionValue& input_value)
 {
 	FVector2D input_vector = input_value.Get<FVector2D>(); 
 	if (IsValid(Controller)) {
-		//get direction
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -100,15 +75,9 @@ void Ainput_player::Look(const FInputActionValue& input_value)
 
 void Ainput_player::ToggleCam()
 {
-	if (IsValid(Controller)) {
-		is_first_person = !is_first_person;
-		if (is_first_person) {
-//todo: set spring arm length instead of camera swap
-			UE_LOG(LogTemp, Warning, TEXT("first person"));
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("third person"));
-		}
+	if (camera_component) {
+
+		camera_component->ToggleCam();
 	}
 }
 
@@ -126,18 +95,18 @@ void Ainput_player::SprintStop(const FInputActionValue& input_value)
 	GetCharacterMovement()->MaxWalkSpeed = walk_speed;
 }
 
-//mousewheel up
 void Ainput_player::ZoomIn(const FInputActionValue& input_value)
 {
-	target_arm_length = FMath::Clamp(target_arm_length - zoom_step, min_arm_length, max_arm_length);
+	if (camera_component) {
+		camera_component->ZoomIn();
+	}
 }
 void Ainput_player::ZoomOut(const FInputActionValue& input_value)
 {
-	target_arm_length = FMath::Clamp(target_arm_length + zoom_step, min_arm_length, max_arm_length);
+	if (camera_component) {
+		camera_component->ZoomOut();
+	}
 }
-
-
-
 
 
 
