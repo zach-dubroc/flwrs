@@ -21,6 +21,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta = (AllowPrivateAccess = "true"))
 	FName fp_camera_socket = "head";
 
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	FVector fp_cam_offset = FVector(0.f, 0.f, 0.f);
+
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	FVector tp_cam_offset = FVector(-160.f, 180.f, 0.f);
+
+	FVector current_cam_offset;
+	FVector target_cam_offset;
+
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float min_arm_length;
 	UPROPERTY(EditAnywhere, Category="Camera")
@@ -28,7 +37,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float zoom_step;
 	UPROPERTY(EditAnywhere, Category="Camera")
-	float zoom_interp_speed;
+	float zoom_interp_speed = 9.f;
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float target_arm_length;
 	UPROPERTY(EditAnywhere, Category="Camera")
@@ -60,6 +69,10 @@ protected:
 	float walk_speed;
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float sprint_speed;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float tp_arm_length;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float fp_arm_length;
 
 public:
 	Ainput_player();
