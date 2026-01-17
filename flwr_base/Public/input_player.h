@@ -11,37 +11,39 @@ class FLWR_BASE_API Ainput_player : public ACharacter
 {
 	GENERATED_BODY()
 
-
-
 protected:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* spring_arm;
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* fp_camera;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta = (AllowPrivateAccess = "true"))
-	FName fp_camera_socket = "head";
+	FName fp_camera_socket = "cam_socket";
 
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	FVector fp_cam_offset = FVector(0.f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere, Category = "Camera")
-	FVector tp_cam_offset = FVector(-160.f, 180.f, 0.f);
+	FVector tp_cam_offset = FVector(-160.f, 110.f, 0.f);
 
 	FVector current_cam_offset;
 	FVector target_cam_offset;
 
 	UPROPERTY(EditAnywhere, Category="Camera")
-	float min_arm_length;
+	float min_arm_length = 0.f;
 	UPROPERTY(EditAnywhere, Category="Camera")
-	float max_arm_length;
+	float max_arm_length = 300.f;
 	UPROPERTY(EditAnywhere, Category="Camera")
-	float zoom_step;
+	float zoom_step = 80.f;
 	UPROPERTY(EditAnywhere, Category="Camera")
-	float zoom_interp_speed = 9.f;
+	float zoom_interp_speed = 20.f;
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float target_arm_length;
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float current_arm_length;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	float tp_arm_length = 300.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	float fp_arm_length = 0.f;
 
 	UPROPERTY(VisibleAnywhere, Category="Camera")
 	bool is_first_person = false;
@@ -62,17 +64,25 @@ protected:
 	class UInputAction* zoom_in_action;
 	UPROPERTY(EditAnywhere, Category="EnhancedInput")
 	class UInputAction* zoom_out_action;
+	UPROPERTY(EditAnywhere, Category="EnhancedInput")
+	class UInputAction* fire_action;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool is_sprinting = false;
 	UPROPERTY(EditDefaultsOnly, Category="Movement")
-	float walk_speed;
+	float walk_speed = FMath::Clamp(600.f, 150.f, 1200.f);
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float sprint_speed;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float tp_arm_length;
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float fp_arm_length;
+	float sprint_speed = FMath::Clamp(1200.f, walk_speed + 1.f, 2400.f);
+
+
+
+	/////WEAPONS 
+
+
+
+	FTimerHandle fire_timer_handle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool is_firing = false;
 
 public:
 	Ainput_player();
@@ -90,4 +100,5 @@ protected:
 	void SprintStart(const FInputActionValue& input_value);
 	void ZoomIn(const FInputActionValue& input_value);
 	void ZoomOut(const FInputActionValue& input_value);
+
 };
